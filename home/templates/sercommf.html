@@ -1,0 +1,317 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Karla:ital,wght@0,200..800;1,200..800&family=Manrope:wght@200..800&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+        rel="stylesheet">
+    <!-- font awsome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Main css -->
+    <link rel="stylesheet" href="../static/community.css">
+    <title>Community</title>
+</head>
+
+<body>
+    <header>
+        <nav class="nav">
+            <div class="nav-left">
+
+                <div class="nl-img">
+                    <a href="{% url 'home' %}">
+                        <img src="../static/image/nav/logom.png" alt="">
+                    </a>
+                </div>
+
+                <div class="nl-text">
+                    <a class="nla" href="{% url 'home' %}">Home</a>
+                    <a class="nla" id="c" href="{% url 'community' %}">Community</a>
+                    <a class="nla" href="{% url 'about' %}">About</a>
+                    {% if data1 %}
+                    {% else %}
+                    <a  class="nla" href="{% url 'membership' %}">Membership</a>
+                    {% endif %}
+                </div>
+
+            </div>
+            <div class="nav-right">
+
+                <form method="GET" action="{% url 'sercomm' %}">
+                    <input type="text" name="q" placeholder="Search..." value="{{query}}" required>
+                    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+                <a href="{% url 'writeblog' %}"><i class="fa fa fa-pen"></i></a>
+                <a href="{% url 'notification' %}"><i class="fa fa fa-bell"></i></a>
+
+                {% for i in data %}
+                <div class="imgwrp">
+
+                    <div class="{% if data1 %} nr-imgg {%else%} nr-img {%endif%}">
+                        {% if i.image %}
+                        <img src="{{ i.image.url }}" alt="" id="toggleBtn">
+                        {% else %}
+                        <span class="nr-text" id="toggleBtn">IMG</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="card" id="dropdownCard">
+                        <!-- Profile Header -->
+                        <a href="{% url 'profile' %}">
+                            <div class="profile">
+                                {% if i.image %}
+                        <img src="{{ i.image.url }}" alt="">
+                        {% else %}
+                        <span class="nr-text">IMG</span>
+                        {% endif %}
+                                <div class="info">
+                                    {%if i.name%}
+                                    <p class="author-name">{{i.name}}</p>
+                                    {%else%}
+                                    <p class="author-name">{{i.username}}</p>
+                                    {%endif%}
+                                    <p class="username">@{{i.username}}</p>
+                                </div>
+                            </div>
+                        </a>
+                        <!-- Menu Items -->
+                        <div class="menu">
+                            <a href="{% url 'home' %}" class="nra"><i class="fas fa-home"></i>Home</a>
+                            <a href="{% url 'community' %}" class="nra"><i class="fas fa-users"></i>Community</a>
+                            <a href="{% url 'about' %}" class="nra"><i class="fas fa-info-circle"></i>About</a>
+                            {% if data1 %}
+                            {% else %}
+                            <a href="{% url 'membership' %}" class="nra"><i class="fas fa-id-card"></i>Membership</a>
+                            {% endif %}
+                            <a href="{% url 'bookmark' %}"><i class="fas fa-bookmark"></i>Bookmarks</a>
+                            <a href="{% url 'pedit' %}"><i class="fas fa-user-cog"></i>Account settings</a>
+                            <a href="{% url 'ufollowers' %}"><i class="fas fa-question-circle"></i>Following &
+                                Followers</a>
+                        </div>
+
+                        <!-- Logout -->
+                        <div class="logout">
+                            <a href="{% url 'logout_view' %}"><i class="fas fa-sign-out-alt"></i>Log out</a>
+                        </div>
+                    </div>
+
+                </div>
+                {% endfor %}
+            </div>
+
+        </nav>
+    </header>
+    <main class="main">
+        <section class="left">
+           <div class="l-top">
+                <form method="post" action="{% url 'sercomm'%}">
+                      {% csrf_token %}
+                        <input type="hidden" name="query" value="{{query}}">
+                    <input type="hidden" name="sercomm" value="sercomm">
+                    <button >For you </button>
+                </form>
+                <form method="post" action="{% url 'sercommf'%}">
+                      {% csrf_token %}
+                    <input type="hidden" name="sercommf" value="sercommf">
+                      <input type="hidden" name="query" value="{{query}}">
+                    <button class="c"> Following </button>
+                </form>
+            </div>
+            {% if results %}
+            {% for i in results %}
+            <div class="l-bot">
+                <div class="blog-top">
+                    <a href="{% url 'feedprofile' i.author.uid %}">
+                        <div class="acc-img">
+                             {% if i.author.image %}
+                            <img src="{{ i.author.image.url }}" alt="">
+                            {% else %}
+                            <span class="nr-text">IMG</span>
+                            {%endif%}
+                        </div>
+                    </a>
+
+                    <div class="acc-name">
+                        <a href="{% url 'feedprofile' i.author.uid %}">
+                            {%if i.author.name%}
+                            <p>{{i.author.name}}</p>
+                            {%else%}
+                            <p>{{i.author.username}}</p>
+                            {%endif%}
+                        </a>
+                    </div>
+
+                    <div class="acc-time">
+                        <p>{{i.created_at|timesince}} ago</p>
+                    </div>
+                </div>
+
+                <div class="blog-bot">
+                    <div class="blog-about">
+                        <div class="b-heding">
+                            <a href="{% url 'blog' i.bwid %}">
+                                <h2>
+                                    {{i.title}}
+                                </h2>
+                            </a>
+                        </div>
+                        <div class="b-des">
+                            {{i.content|safe}}
+                        </div>
+                    </div>
+                    <div class="blog-img">
+
+                        <div class="b-img">
+                            {%if i.cimage%}
+                            <img src="{{ i.cimage.url }}" alt="">
+                            {%endif%}
+                        </div>
+
+                        <div class="book-m">
+                            <form method="post" action="{% url 'save' i.bwid%}">
+                                {% csrf_token %}
+                                <input type="hidden" name="bwid" value="{{ i.bwid }}">
+                                <input type="hidden" name="sercommf" value="sercommf">
+                                <input type="hidden" name="query" value="{{query}}">
+                                <button class="save-btn {% if i.is_saved %}save{% endif %}">
+                                    <i
+                                        class="fa{% if i.is_saved %} -solid{% else %}-regular{% endif %} fa-bookmark"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+            {% else %}
+            <p class="nore">No results found.</p>
+            {%endif%}
+
+        </section>
+
+        <aside class="right">
+
+            <div class="following">
+                <a href="{% url 'ufollowing' %}">
+                    <div class="f-heding">
+                        <h2>Following</h2>
+                    </div>
+                </a>
+                {% for i in follow %}
+                <div class="foll-acount">
+
+                    <div class="{% if data1 %} fa-img {%else%}fa-imgg{%endif%}">
+                        <a href="{% url 'feedprofile' i.following.uid %}"></a>
+                        {% if i.following.image %}
+                        <img src="{{ i.following.image.url }}" alt="">
+                        {% else %}
+                        <span class="nr-text">IMG</span>
+                        {%endif%}
+                        </a>
+                    </div>
+
+                    <div class="fa-name">
+                        <a href="{% url 'feedprofile' i.following.uid %}">
+                            {%if i.following.name%}
+                            <p>{{i.following.name}}</p>
+                            {%else%}
+                            <p>{{i.following.username}}</p>
+                            {%endif%}
+                        </a>
+                    </div>
+
+                </div>
+                {%endfor%}
+
+            </div>
+            <div class="bookmark">
+                <a href="{% url 'bookmark' %}">
+                    <div class="b-heding">
+                        <h2>Bookmarks</h2>
+                    </div>
+                </a>
+                {% for i in save %}
+                <div class="book-about">
+                    <div class="ba-tital">
+                        <a href="{% url 'blog' i.bwid %}">
+                            <p>{{i.title}}</p>
+                        </a>
+                    </div>
+                    <div class="ba-name">
+                        <a href="{% url 'feedprofile' i.uid %}">
+                            <div class="bn">
+                                {%if i.name%}
+                                <p>{{i.name}}</p>
+                                {%else%}
+                                <p>{{i.username}}</p>
+                                {%endif%}
+                            </div>
+                        </a>
+                        <div class="bh">
+                            <a href="{% url 'blog' i.bwid %}">
+                                <p>{{i.date|timesince}} ago</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {%endfor%}
+
+
+            </div>
+
+            <div class="extra-link">
+                <div class="exl-heding">
+                    <h2>External links</h2>
+                </div>
+                <div class="exl-link">
+                    <a href="{% url 'home' %}">Home</a>
+                    <a href="{% url 'community' %}">Community</a>
+                    <a href="{% url 'about' %}">About</a>
+                    {% if data1 %}
+                    {% else %}
+                    <a href="{% url 'membership' %}">Membership</a>
+                    {% endif %}
+                </div>
+                <div class="exl-cont">
+                    <div class="exlc-hedi">
+                        <h2>Connect with us</h2>
+                    </div>
+                    <div class="exlc-icon">
+                        <a href=""><i class="fa-brands fa-instagram"></i></a>
+                        <a href=""><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href=""><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="exl-copy">
+                    <p>© NextTeb 2025. All Rights Reserved.</p>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <script>
+        const toggleBtn = document.getElementById('toggleBtn');
+        const dropdownCard = document.getElementById('dropdownCard');
+
+        toggleBtn.addEventListener('click', () => {
+            dropdownCard.style.display = dropdownCard.style.display === 'block' ? 'none' : 'block';
+        });
+
+        window.addEventListener('click', function (e) {
+            if (!toggleBtn.contains(e.target) && !dropdownCard.contains(e.target)) {
+                dropdownCard.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>

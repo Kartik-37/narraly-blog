@@ -1,0 +1,87 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Karla:ital,wght@0,200..800;1,200..800&family=Manrope:wght@200..800&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+        rel="stylesheet">
+    <!-- font awsome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Main css -->
+    <link rel="stylesheet" href="../static/writeblog.css">
+    
+    <title>Narraly</title>
+</head>
+
+<body>
+    <form action="{% url 'writeblog' %}" method="post"
+        onsubmit="document.getElementById('hidden-content').value = document.getElementById('editor').innerHTML;"
+        enctype="multipart/form-data">
+        {% csrf_token %}
+        <header>
+            <a href="{% url 'home' %}"><img src="../static/image/nav/logom.png" alt=""></a>
+            <button type="submit">
+                <p>Publish</p>
+            </button>
+        </header>
+
+        <main class="main">
+
+            <section class="addimg">
+                <div class="cover-upload">
+                    <label for="id_cover_image" class="cover-btn">
+                        <i class="fa-regular fa-image"></i>
+                        Add Cover
+                    </label>
+                    <input type="file" name="cover_image" id="id_cover_image" accept="image/*"
+                        onchange="previewCover(this)" hidden>
+                </div>
+
+                <img id="coverPreview" />
+
+            </section>
+            <section class="blog-write">
+                <input type="text" name="title" class="title-input" placeholder="Blog Title" required>
+                <input type="text" name="subtitle" class="subtitle-input" placeholder="Subtitle (optional)">
+                <div id="editor" class="content-editor" contenteditable="true"></div>
+                <input type="hidden" name="content" id="hidden-content" placeholder="Start writing your blog...">
+            </section>
+        </main>
+    </form>
+    <!-- add image -->
+    <script>
+        function previewCover(input) {
+            const preview = document.getElementById('coverPreview');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        document.querySelector("form").addEventListener("submit", function () {
+            const editorContent = document.getElementById("editor").innerHTML;
+            document.getElementById("hidden-content").value = editorContent;
+        });
+        document.getElementById("editor").addEventListener("paste", function (e) {
+            e.preventDefault();
+            // Get plain text from clipboard
+            const text = (e.clipboardData || window.clipboardData).getData("text");
+            // Insert plain text
+            document.execCommand("insertText", false, text);
+        });
+    </script>
+</body>
+
+</html>

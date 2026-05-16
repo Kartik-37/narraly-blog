@@ -1,0 +1,256 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Karla:ital,wght@0,200..800;1,200..800&family=Manrope:wght@200..800&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+        rel="stylesheet">
+    <!-- font awsome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Main css -->
+    <link rel="stylesheet" href="../static/profileu.css">
+    <title>Profile</title>
+</head>
+
+<body>
+    <header>
+<nav class="nav">
+            <div class="nav-left">
+
+                <div class="nl-img">
+                    <a href="{% url 'home' %}">
+                        <img src="../static/image/nav/logom.png" alt="">
+                    </a>
+                </div>
+
+                <div class="nl-text">
+                    <a class="nla" href="{% url 'home' %}">Home</a>
+                    <a class="nla"  href="{% url 'community' %}">Community</a>
+                    <a class="nla" href="{% url 'about' %}">About</a>
+                    {% if data1 %}
+                    {% else %}
+                    <a class="nla" href="{% url 'membership' %}">Membership</a>
+                    {% endif %}
+                </div>
+
+            </div>
+            <div class="nav-right">
+                <form method="GET" action="{% url 'sercomm' %}">
+                    <input type="text" name="q" placeholder="Search..." required>
+                    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+
+                <a href="{% url 'writeblog' %}"><i class="fa fa fa-pen"></i></a>
+
+                <a href="{% url 'notification' %}"><i class="fa fa fa-bell"></i></a>
+
+                {% for i in data %}
+                <div class="imgwrp">
+                    <div class="{% if data1 %} nr-imgg {%else%} nr-img {%endif%}">
+                        {% if i.image %}
+                        <img src="{{ i.image.url }}" alt="" id="toggleBtn">
+                        {% else %}
+                        <span class="nr-text" id="toggleBtn">IMG</span>
+                        {% endif %}
+                    </div>
+                    <div class="card" id="dropdownCard">
+                        <!-- Profile Header -->
+                        <a href="{% url 'profile' %}">
+                            <div class="profileh">
+                                <div class="{% if data1 %} nr-imggp {%else%} nr-imgp {%endif%}">
+                                {% if i.image %}
+                                <img src="{{ i.image.url }}" alt="" id="toggleBtn">
+                                {% else %}
+                                <span class="nr-textp">IMG</span>
+                                {% endif %}
+                                </div>
+                                <div class="info">
+                                    {%if i.name%}
+                                    <p class="author-name">{{i.name}}</p>
+                                    {%else%}
+                                    <p class="author-name">{{i.username}}</p>
+                                    {%endif%}
+                                    <p class="username">@{{i.username}}</p>
+                                </div>
+                            </div>
+                        </a>
+                        <!-- Menu Items -->
+                        <div class="menu">
+                            <a href="{% url 'home' %}" class="nra"><i class="fas fa-home"></i>Home</a>
+                            <a href="{% url 'community' %}" class="nra"><i class="fas fa-users"></i>Community</a>
+                            <a href="{% url 'about' %}" class="nra"><i class="fas fa-info-circle"></i>About</a>
+                            {% if data1 %}
+                            {% else %}
+                            <a href="{% url 'membership' %}" class="nra"><i class="fas fa-id-card"></i>Membership</a>
+                            {% endif %}
+                            <a href="{% url 'bookmark' %}"><i class="fas fa-bookmark"></i>Bookmarks</a>
+                            <a href="{% url 'pedit' %}"><i class="fas fa-user-cog"></i>Account settings</a>
+                            <a href="{% url 'ufollowers' %}"><i class="fas fa-question-circle"></i>Following &
+                                Followers</a>
+                        </div>
+
+                        <!-- Logout -->
+                        <div class="logout">
+                            <a href="{% url 'logout_view' %}"><i class="fas fa-sign-out-alt"></i>Log out</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        </nav>
+    </header>
+    <main class="main">
+        {% for i in data %}
+        <section class="profile">
+
+            <section class="profile-top">
+                <div class="proft-img">
+                    {% if i.image %}
+                    <img src="{{ i.image.url }}" alt="">
+                    {% else %}
+                    <span class="initial">IMG</span>
+                    {% endif %}
+
+                </div>
+
+                <div class="proft-name">
+                    {% if i.name %}
+                    <h2>{{i.name}}</h2>
+                    {% else %}
+                    <h2>{{i.username}}</h2>
+                    {% endif %}
+                    <h3>@{{i.username}}</h3>
+                    <div class="follow">
+                        <a href="{% url 'followersi' i.uid %}">
+                            <p>{{foprofile|length}} Followers</p>
+                        </a>
+                        <a href="{% url 'followingi' i.uid %}">
+                            <p>{{frprofile|length}} Following</p>
+                        </a>
+                    </div>
+                    <div class="prot-logout">
+                        <a href="{% url 'logout_view' %}"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a>
+                    </div>
+                </div>
+
+                <div class="prot-edit">
+                    <a href="{% url 'pedit' %}"><i class="fa-solid fa-pen"></i> Edit</a>
+                </div>
+            </section>
+
+            <section class="member-all">
+                <div class="m-link">
+                    {% if i.twitter %}
+                    <a href="{{i.twitter}}"><i class="fa-brands fa-x-twitter"></i></a>
+                    {% endif %}
+                    {% if i.instagram %}
+                    <a href="{{i.instagram}}"><i class="fa-brands fa-instagram"></i></a>
+                    {% endif %}
+                    {% if i.github %}
+                    <a href="{{i.github}}"><i class="fa-brands fa-github"></i></a>
+                    {% endif %}
+                    {% if i.youtube %}
+                    <a href="{{i.youtube}}"><i class="fa-brands fa-youtube"></i></a>
+                    {% endif %}
+                </div>
+                <div class="m-addr">
+                    {% if i.email %}
+                    <a href=""><i class="fa-regular fa-envelope"></i> {{i.email}}</a>
+                    {%endif%}
+                </div>
+                <div class="m-join">
+                    <a href=""><i class="fa-regular fa-calendar"></i> Member Since Jun, 2025</a>
+                </div>
+            </section>
+
+            <section class="about-me">
+                <h2>About Me</h2>
+                <p>{{i.profilbio}}</p>
+            </section>
+
+            <section class="recent-acti">
+                <h2>Recent Activity</h2>
+
+                {% for i in blog %}
+                <div class="ra-data">
+                    <div class="rad-left">
+                        <span>{{i.created_at|date:"M j"}}</span>
+                        <div class="dot-line"></div>
+                    </div>
+
+                    <div class="rad-right">
+                        <a href="{% url 'blog' i.bwid %}">
+                            <p>{{i.title}}</p>
+                        </a>
+                    </div>
+
+                </div>
+                {%endfor%}
+
+                
+                <div class="raa-data">
+                    <div class="rada-left">
+                        <span>{{join_date|date:"M j"}}</span>
+                    </div>
+                    <div class="rada-right">
+                        <p>Joined Narraly</p>
+                    </div>
+                </div>
+
+                
+            </section>
+
+        </section>
+        {% endfor %}
+    </main>
+
+    <footer class="footer">
+        <section class="f-top">
+            <div class="f-left">
+                <div class="fl-img">
+                    <img src="../static/image/nav/logom.png" alt="">
+                </div>
+                <div class="fl-text">
+                    <a href="{% url 'home' %}">Home</a>
+                    <a href="{% url 'community' %}">Community</a>
+                    <a href="{% url 'about' %}">About</a>
+                </div>
+            </div>
+            <div class="f-right">
+                <div class="soi"><i class="fa-brands fa-instagram"></i></div>
+                <div class="soi"><i class="fa-brands fa-x-twitter"></i></div>
+                <div class="soi"><i class="fa-brands fa-youtube"></i></div>
+            </div>
+        </section>
+        <section class="f-bot">
+            <p>© NextTeb 2025. All Rights Reserved.</p>
+        </section>
+
+    </footer>
+</body>
+<script>
+    const toggleBtn = document.getElementById('toggleBtn');
+    const dropdownCard = document.getElementById('dropdownCard');
+
+    toggleBtn.addEventListener('click', () => {
+        dropdownCard.style.display = dropdownCard.style.display === 'block' ? 'none' : 'block';
+    });
+
+    window.addEventListener('click', function (e) {
+        if (!toggleBtn.contains(e.target) && !dropdownCard.contains(e.target)) {
+            dropdownCard.style.display = 'none';
+        }
+    });
+</script>
+
+</html>

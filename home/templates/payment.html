@@ -1,0 +1,213 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Karla:ital,wght@0,200..800;1,200..800&family=Manrope:wght@200..800&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+        rel="stylesheet">
+    <!-- font awsome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Main css -->
+    <link rel="stylesheet" href="../static/payment.css">
+    <title>Narraly</title>
+</head>
+
+<body>
+    <header>
+        <nav class="nav">
+            <div class="nav-left">
+
+                <div class="nl-img">
+                    <a href="{% url 'home' %}">
+                        <img src="../static/image/nav/logom.png" alt="">
+                    </a>
+                </div>
+
+                <div class="nl-text">
+                    <a href="{% url 'home' %}"class="nla">Home</a>
+                    <a href="{% url 'community' %}" class="nla">Community</a>
+                    <a href="{% url 'about' %}" class="nla">About</a>
+                    {% if data1 %}
+                    {% else %}
+                    <a href="{% url 'membership' %}" class="nla">Membership</a>
+                    {% endif %}
+                </div>
+
+            </div>
+            <div class="nav-right">
+
+                <form method="GET" action="{% url 'sercomm' %}">
+                    <input type="text" name="q" placeholder="Search..." value="{{query}}" required>
+                    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+                <a href="{% url 'writeblog' %}"><i class="fa fa fa-pen"></i></a>
+                <a href="{% url 'notification' %}"><i class="fa fa fa-bell"></i></a>
+
+                {% for i in data %}
+                <div class="imgwrp">
+
+                    <div class="{% if data1 %} nr-imgg {%else%} nr-img {%endif%}">
+                        {% if i.image %}
+                        <img src="{{ i.image.url }}" alt="" id="toggleBtn">
+                        {% else %}
+                        <span class="nr-text" id="toggleBtn">IMG</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="card" id="dropdownCard">
+                        <!-- Profile Header -->
+                        <a href="{% url 'profile' %}">
+                            <div class="profile">
+                               <div class="{% if data1 %} nr-imggp {%else%} nr-imgp {%endif%}">
+                                {% if i.image %}
+                                <img src="{{ i.image.url }}" alt="" id="toggleBtn">
+                                {% else %}
+                                <span class="nr-textp">IMG</span>
+                                {% endif %}
+                                </div>
+                                <div class="info">
+                                    {%if i.name%}
+                                    <p class="author-name">{{i.name}}</p>
+                                    {%else%}
+                                    <p class="author-name">{{i.username}}</p>
+                                    {%endif%}
+                                    <p class="username">@{{i.username}}</p>
+                                </div>
+                            </div>
+                        </a>
+                        <!-- Menu Items -->
+                        <div class="menu">
+                            <a href="{% url 'home' %}" class="nra"><i class="fas fa-home"></i>Home</a>
+                            <a href="{% url 'community' %}" class="nra"><i class="fas fa-users"></i>Community</a>
+                            <a href="{% url 'about' %}" class="nra"><i class="fas fa-info-circle"></i>About</a>
+                            {% if data1 %}
+                            {% else %}
+                            <a href="{% url 'membership' %}" class="nra"><i class="fas fa-id-card"></i>Membership</a>
+                            {% endif %}
+                            <a href="{% url 'bookmark' %}"><i class="fas fa-bookmark"></i>Bookmarks</a>
+                            <a href="{% url 'pedit' %}"><i class="fas fa-user-cog"></i>Account settings</a>
+                            <a href="{% url 'ufollowers' %}"><i class="fas fa-question-circle"></i>Following &
+                                Followers</a>
+                        </div>
+
+                        <!-- Logout -->
+                        <div class="logout">
+                            <a href="{% url 'logout_view' %}"><i class="fas fa-sign-out-alt"></i>Log out</a>
+                        </div>
+                    </div>
+
+                </div>
+                {% endfor %}
+            </div>
+
+        </nav>
+    </header>
+    <main class="main">
+        {% for i in data %}
+        <section class="pyment">
+            <div class="payment-container">
+                <h1 class="title">Payment</h1>
+                <p class="signed-info">You are signed up with <strong>{{i.email}}</strong></p>
+
+                <div class="summary-card">
+                    <div class="plan">
+                        <div class="p-top">
+                            <div class="avatar-wrapper">
+                                <div class="avatar">
+                                {% if i.image %}
+                                <img src="{{ i.image.url }}" alt="" >
+                                {% else %}
+                                <span class="nr-texta" >IMG</span>
+                                {% endif %}
+                                </div>
+                            </div>
+                            <div class="pt-text">
+                                <h2>Narraly Member</h2>
+                                <p>Billed Today</p>
+                            </div>
+                        </div>
+                        <div class="amount">₹50</div>
+                    </div>
+                </div>
+
+                <div class="payment-card">
+                    <h3>Credit/Debit Card</h3>
+
+
+                    <form method="post" action="{% url 'payment' %}" class="card-form">
+                        {% csrf_token %}
+                        <input type="text" name="cardno" placeholder="Card number" class="card-input" maxlength="16" />
+                        <div class="row">
+                            <input type="text" name="carddate" placeholder="MM/YY" class="half" maxlength="5" />
+                            <input type="text" name="secucode" placeholder="Security code" class="half" maxlength="3" />
+                        </div>
+                        <button class="pay-btn">Pay</button>
+                    </form>
+                </div>
+
+                <p class="terms">
+                    By starting a Narraly membership, you agree to our <a href="#">Membership Terms of Service</a>.
+                    Your payment method will be charged a recurring ₹50 yearly fee, unless you decide to cancel.
+                    No refunds for memberships canceled between billing cycles.
+                </p>
+            </div>
+
+
+        </section>
+        {%endfor%}
+
+    </main>
+
+    <footer class="footer">
+        <section class="f-top">
+            <div class="f-left">
+                <div class="fl-img">
+                    <img src="../static/image/nav/logom.png" alt="">
+                </div>
+                <div class="fl-text">
+                    <a href="{% url 'home' %}">Home</a>
+                    <a class="c" href="{% url 'community' %}">Community</a>
+                    <a href="{% url 'about' %}">About</a>
+                    {% if data1 %}
+                    {% else %}
+                    <a href="{% url 'membership' %}">Membership</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="f-right">
+                <div class="soi"><i class="fa-brands fa-instagram"></i></div>
+                <div class="soi"><i class="fa-brands fa-x-twitter"></i></div>
+                <div class="soi"><i class="fa-brands fa-youtube"></i></div>
+            </div>
+        </section>
+        <section class="f-bot">
+            <p>© NextTeb 2025. All Rights Reserved.</p>
+        </section>
+
+    </footer>
+</body>
+<script>
+    const toggleBtn = document.getElementById('toggleBtn');
+    const dropdownCard = document.getElementById('dropdownCard');
+
+    toggleBtn.addEventListener('click', () => {
+        dropdownCard.style.display = dropdownCard.style.display === 'block' ? 'none' : 'block';
+    });
+
+    window.addEventListener('click', function (e) {
+        if (!toggleBtn.contains(e.target) && !dropdownCard.contains(e.target)) {
+            dropdownCard.style.display = 'none';
+        }
+    });
+</script>
+
+</html>

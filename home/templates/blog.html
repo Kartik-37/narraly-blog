@@ -1,0 +1,359 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Karla:ital,wght@0,200..800;1,200..800&family=Manrope:wght@200..800&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+        rel="stylesheet">
+    <!-- font awsome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Main css -->
+    <link rel="stylesheet" href="../static/blog.css">
+    <title>Feed Profile</title>
+</head>
+
+<body>
+    <header>
+        <nav class="nav">
+            <div class="nav-left">
+
+                <div class="nl-img">
+                    <a href="{% url 'home' %}">
+                        <img src="../static/image/nav/logom.png" alt="">
+                    </a>
+                </div>
+
+                <div class="nl-text">
+                    <a class="nla" href="{% url 'home' %}">Home</a>
+                    <a class="nla" href="{% url 'community' %}">Community</a>
+                    <a class="nla" href="{% url 'about' %}">About</a>
+                    {% if data1 %}
+                    {% else %}
+                    <a class="nla" href="{% url 'membership' %}">Membership</a>
+                    {% endif %}
+                </div>
+
+            </div>
+            <div class="nav-right">
+                <form method="GET" action="{% url 'sercomm' %}">
+                    <input type="text" name="q" placeholder="Search..." required>
+                    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+
+                <a href="{% url 'writeblog' %}"><i class="fa fa fa-pen"></i></a>
+
+                <a href="{% url 'notification' %}"><i class="fa fa fa-bell"></i></a>
+
+                {% for i in data %}
+                <div class="imgwrp">
+                    <div class="{% if data1 %} nr-imgg {%else%} nr-img {%endif%}">
+                        {% if i.image %}
+                        <img src="{{ i.image.url }}" alt="" id="toggleBtn">
+                        {% else %}
+                        <span class="nr-text" id="toggleBtn">IMG</span>
+                        {% endif %}
+                    </div>
+                    <div class="card" id="dropdownCard">
+                        <!-- Profile Header -->
+                        <a href="{% url 'profile' %}">
+                            <div class="profile">
+                                <div class="{% if data1 %} nr-imggp {%else%} nr-imgp {%endif%}">
+                                    {% if i.image %}
+                                    <img src="{{ i.image.url }}" alt="" id="toggleBtn">
+                                    {% else %}
+                                    <span class="nr-textp">IMG</span>
+                                    {% endif %}
+                                </div>
+                                <div class="info">
+                                    {%if i.name%}
+                                    <p class="author-name">{{i.name}}</p>
+                                    {%else%}
+                                    <p class="author-name">{{i.username}}</p>
+                                    {%endif%}
+                                    <p class="username">@{{i.username}}</p>
+                                </div>
+                            </div>
+                        </a>
+                        <!-- Menu Items -->
+                        <div class="menu">
+                            <a href="{% url 'home' %}" class="nra"><i class="fas fa-home"></i>Home</a>
+                            <a href="{% url 'community' %}" class="nra"><i class="fas fa-users"></i>Community</a>
+                            <a href="{% url 'about' %}" class="nra"><i class="fas fa-info-circle"></i>About</a>
+                            {% if data1 %}
+                            {% else %}
+                            <a href="{% url 'membership' %}" class="nra"><i class="fas fa-id-card"></i>Membership</a>
+                            {% endif %}
+                            <a href="{% url 'bookmark' %}"><i class="fas fa-bookmark"></i>Bookmarks</a>
+                            <a href="{% url 'pedit' %}"><i class="fas fa-user-cog"></i>Account settings</a>
+                            <a href="{% url 'ufollowers' %}"><i class="fas fa-question-circle"></i>Following &
+                                Followers</a>
+                        </div>
+
+                        <!-- Logout -->
+                        <div class="logout">
+                            <a href="{% url 'logout_view' %}"><i class="fas fa-sign-out-alt"></i>Log out</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        </nav>
+    </header>
+
+    <main class="main">
+        {%for i in data2%}
+        <section class="heding">
+            <h2>{{i.title}}</h2>
+        </section>
+        <section class="subtitle">
+            <h2>{{i.subtitle}}</h2>
+        </section>
+
+        <section class="account">
+            <div class="author-box">
+                <a href="{% url 'feedprofile' i.author.uid %}">
+                    <div class="author-img">
+                        {% if i.author.image %}
+                        <img src="{{ i.author.image.url }}" alt="">
+                        {% else %}
+                        <span class="nr-text">IMG</span>
+                        {%endif%}
+                    </div>
+                </a>
+
+                <div class="author-info">
+                    <a href="{% url 'feedprofile' i.author.uid %}">
+                        {%if i.author.name%}
+                        <span class="author-name">{{i.author.name}}</span>
+                        {%else%}
+                        <span class="author-name">{{i.author.username}}</span>
+                        {%endif%}
+                    </a>
+                    <span class="dot">•</span>
+                    <span class="date">{{i.created_at|date:"M j, Y"}}</span>
+                    <span class="dot">•</span>
+                    <span class="read-time">
+                        <i class="fa fa fa-book-open"></i> {{read_time}} min read
+                    </span>
+                </div>
+            </div>
+        </section>
+        {% if i.cimage %}
+        <section class="cover">
+            <img src="{{ i.cimage.url }}" alt="">
+        </section>
+        {%endif%}
+
+
+        <section class="parg">
+            <p>
+                {{i.content|safe}}
+            </p>
+        </section>
+
+        <section class="icon">
+            <div class="action-bar">
+                <form method="post" action="{% url 'like_blog' bwid %}">
+                    {% csrf_token %}
+                    <button class="like-btn {% if liked_blog %}liked{% endif %}">
+                        <i class="fa{% if liked_blog %}-solid{% else %}-regular{% endif %} fa-heart"></i>
+                    </button>
+                </form>
+                <div class="divider"></div>
+                <form method="post" action="{% url 'save' bwid %}">
+                    {% csrf_token %}
+                    <button class="save-btn {% if save %}save{% endif %}">
+                        <i class="fa{% if save %}-solid{% else %}-regular{% endif %} fa-bookmark"></i>
+                    </button>
+                </form>
+            </div>
+        </section>
+        {%endfor%}
+        <section class="comment">
+            <h2>Responses </h2>
+            {% for i in data %}
+            <div class="us-comment">
+                <div class="uc-up">
+                    <a href="{% url 'feedprofile' i.uid %}">
+                    <div class="acc-img">
+                        
+                            {% if i.image %}
+                            <img src="{{ i.image.url }}" alt="">
+                            {% else %}
+                            <span class="nr-text">IMG</span>
+                            {%endif%}
+                        
+                    </div>
+                    </a>
+
+                    <div class="acc-name">
+                        <a href="{% url 'feedprofile' i.uid %}">
+                            {%if i.name%}
+                            <p>{{i.name}}</p>
+                            {%else%}
+                            <p>{{i.username}}</p>
+                            {%endif%}
+                        </a>
+                    </div>
+                </div>
+                <form action="{% url 'comment'%}" method="post" onsubmit="submitComment()">
+                    {% csrf_token %}
+                    <div class="uc-down">
+                        <div id="editor" class="content-editor" contenteditable="true"></div>
+                        <input type="hidden" name="comment" id="hidden-content"
+                            placeholder="Start writing your blog...">
+                        <input type="hidden" name="bwid" value="{{ bwid }}">
+                        <button type="submit">comment</button>
+                    </div>
+                </form>
+            </div>
+            {%endfor%}
+            {% for k in comments %}
+            <div class="pcomment">
+                <div class="pc-up">
+                    <div class="cacc-img">
+
+                        {% if k.image %}
+                        <img src="{{ k.image.url }}" alt="">
+                        {% else %}
+                        <span class="nr-text">IMG</span>
+                        {%endif%}
+                        </a>
+                    </div>
+                    
+                        <a href="{% url 'feedprofile' k.uid %}">
+                    <div class="cacc-name">
+                            {%if k.name%}
+                            <p>{{k.name}}</p>
+                            {%else%}
+                            <p>{{k.username}}</p>
+                            {%endif%}
+                        
+                        <span>{{k.date|date:"M j, Y"}}</span>
+                    </div>
+                    </a>
+                </div>
+                <div class="pc-center">
+                    <p>{{k.comment|safe}}</p>
+                </div>
+                <div class="pc-down">
+                    <form method="post" action="{% url 'like_comment' k.cid %}">
+                        {% csrf_token %}
+                        {% if k.liked %}
+                        <button class="like-btn liked">
+                            <i class="fa-solid fa-heart"></i>
+                        </button>
+                        {% else %}
+                        <button class="like-btn">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        {% endif %}
+                    </form>
+                </div>
+
+                <!-- <div class="reply">
+                    <div class="reply-us">
+                        <input type="text" name="comment" placeholder="What are your thoughts?">
+                        <button>comment</button>
+                    </div>
+                    <div class="reply-acc">
+                        <div class="reply-up">
+                            <div class="reply-img">
+                                <img src="../static/image/account/ac3.jpeg" alt="">
+                            </div>
+
+                            <div class="reply-name">
+                                <p>Laxman Gupta</p>
+                                <span>13 Jun</span>
+                            </div>
+                        </div>
+                        <div class="reply-center">
+                            <p>Well it's 4am now and you had my attention.... Coffee test confirmed working I guess 🙃
+                            </p>
+                        </div>
+                        <div class="reply-down">
+                            <a href=""><i class="fa-regular fa-heart"></i>1</a>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+            {% endfor %}
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <section class="f-top">
+            <div class="f-left">
+                <div class="fl-img">
+                    <a href="{% url 'home' %}">
+                        <img src="../static/image/nav/logom.png" alt="">
+                    </a>
+                </div>
+                <div class="fl-text">
+                    <a href="{% url 'home' %}">Home</a>
+                    <a href="{% url 'community' %}">Community</a>
+                    <a href="{% url 'about' %}">About</a>
+                    {% if data1 %}
+                    {% else %}
+                    <a href="{% url 'membership' %}">Membership</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="f-right">
+                <div class="soi"><i class="fa-brands fa-instagram"></i></div>
+                <div class="soi"><i class="fa-brands fa-x-twitter"></i></div>
+                <div class="soi"><i class="fa-brands fa-youtube"></i></div>
+            </div>
+        </section>
+        <section class="f-bot">
+            <p>© NextTeb 2025. All Rights Reserved.</p>
+        </section>
+
+    </footer>
+    <!-- add comment -->
+    <script>
+        document.querySelector("form").addEventListener("submit", function () {
+            const editorContent = document.getElementById("editor").innerHTML;
+            document.getElementById("hidden-content").value = editorContent;
+        });
+        function submitComment() {
+            const editor = document.getElementById("editor");
+            const hiddenInput = document.getElementById("hidden-content");
+            hiddenInput.value = editor.innerText.trim();
+        }
+        document.getElementById("editor").addEventListener("paste", function (e) {
+            e.preventDefault();
+            // Get plain text from clipboard
+            const text = (e.clipboardData || window.clipboardData).getData("text");
+            // Insert plain text
+            document.execCommand("insertText", false, text);
+        });
+
+        const toggleBtn = document.getElementById('toggleBtn');
+        const dropdownCard = document.getElementById('dropdownCard');
+
+        toggleBtn.addEventListener('click', () => {
+            dropdownCard.style.display = dropdownCard.style.display === 'block' ? 'none' : 'block';
+        });
+
+        window.addEventListener('click', function (e) {
+            if (!toggleBtn.contains(e.target) && !dropdownCard.contains(e.target)) {
+                dropdownCard.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>
