@@ -7,6 +7,9 @@ from django.db.models import Q
 from django.urls import reverse
 from django.db.models import Max,Sum,Count
 from .models import Profile,View,Member,Pyment,Blogwrite,Comment,Save,Follow,Like,Contect
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from django.shortcuts import render, redirect
 
 def index(request):
     if request.user.is_authenticated:
@@ -657,6 +660,7 @@ def register(request):
         obj.save()
         obj1=View(username=name)
         obj1.save()
+        login(request, sql)
         return redirect ('home')
     else:
         return render (request,'../templates/login.html')
