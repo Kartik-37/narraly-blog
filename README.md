@@ -129,37 +129,6 @@ narraly-blog/
 
 ---
 
-## 🚀 Getting Started
-
-> ⚠️ **This project is shared for portfolio and demonstration only.**
-> Copying or reusing this code is strictly prohibited. See [Copyright](#-copyright--license).
-
-### Prerequisites
-
-- Python 3.x installed
-- pip package manager
-
-### Run Locally
-
-```bash
-# Step 1 — Clone the repository
-git clone https://github.com/Kartik-37/narraly-blog.git
-cd narraly-blog
-
-# Step 2 — Install all dependencies
-pip install -r requirements.txt
-
-# Step 3 — Apply database migrations
-python manage.py migrate
-
-# Step 4 — Start the development server
-python manage.py runserver
-```
-
-Then open **http://127.0.0.1:8000** in your browser.
-
----
-
 ## 🌐 Deployment
 
 Narraly is deployed on **[Render](https://render.com)** — a modern cloud platform for web applications.
