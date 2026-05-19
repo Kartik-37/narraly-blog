@@ -12,6 +12,7 @@ urlpatterns = [
     path('Community/Follow',views.sercommf,name="sercommf"),
     path('Community/Serch',views.sercomm,name="sercomm"),
     path('profile',views.profile,name="profile"),
+    path('delete-blog/<int:bwid>/', views.delete_blog, name='delete_blog'),
     path('Profile Edit',views.pedit,name="pedit"),
     path('feedprofile/<int:uid>',views.feedprofile,name="feedprofile"),
     path('follow/<int:uid>/', views.follow_toggle, name='follow_toggle'),

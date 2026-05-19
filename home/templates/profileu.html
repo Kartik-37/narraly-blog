@@ -191,7 +191,14 @@
                     <div class="rad-right">
                         <a href="{% url 'blog' i.bwid %}">
                             <p>{{i.title}}</p>
+                                
                         </a>
+                        <form action="{% url 'delete_blog' i.bwid %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" style="border:none; background:none;">
+                                        <span><i class="fa-solid fa-trash-can"></i></span>
+                                    </button>
+                                </form>
                     </div>
 
                 </div>

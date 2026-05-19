@@ -362,6 +362,19 @@ def profile(request):
             return render (request,'../templates/profileu.html',context)
     else:
          return redirect('home')
+
+def delete_blog(request, bwid):
+    if request.user.is_authenticated:
+
+        blog = get_object_or_404(Blogwrite, bwid=bwid)
+
+        # Security check
+        if blog.author.username == request.user.username:
+            blog.delete()
+
+        return redirect('profile')
+
+    return redirect('register')
     
 def pedit(request):
     if request.user.is_authenticated:
@@ -654,6 +667,14 @@ def register(request):
         name = request.POST.get("name") 
         email = request.POST.get("email") 
         password = request.POST.get("password") 
+                # Check username
+        if User.objects.filter(username=name).exists():
+
+            context = {
+                'register_error': 'Username already exists'
+            }
+
+            return render(request, '../templates/login.html', context)
         sql = User.objects.create_user(username=name,email=email,password=password)
         sql.save()
         obj=Profile(username=name,email=email)  
